@@ -59,8 +59,8 @@ These are the settings the original board was printed with:
 The Lykill design file sets the fasteners to screws, size M2, with counterbored
 screw heads for both the faceplate and the bottom plate. The screw bosses are 6.4 mm
 in diameter (3.2 mm radius) and 10 mm tall, five on the left half and six on the right.
-The case takes heat-set inserts in those bosses; the design file does not state an
-insert size, so match your inserts to the M2 screws and the boss size.
+The case takes heat-set inserts in those bosses. The original build used 3 mm
+heat-set inserts.
 
 ## Firmware
 
@@ -69,21 +69,52 @@ environment described below.
 
 ### Layers
 
-The pictures show the current layout. A layer rework is in progress, and the
-pictures will be updated with it.
+Five layers. Every key on every layer is set, so no key falls through to a lower
+layer; keys a layer does not use do nothing and stay dark.
+
+| Layer | Name | How to reach it |
+| :--- | :--- | :--- |
+| 0 | Base | Default |
+| 1 | Symbols and arrows | Hold the left thumb key |
+| 2 | Gaming | Toggle (TG) key; switches the lighting to Digital Rain with WASD in red |
+| 3 | Windows: focus | Hold the right thumb key |
+| 4 | Windows: tile and move | Hold both thumb keys |
+
+Layers 3 and 4 send KDE Plasma window shortcuts (focus, move to screen, quick tile,
+custom tiles, maximize, minimize, close). After a focus or screen move the board also
+sends `Meta+F5` (Move Mouse to Focus), so the pointer follows the window. Other desktops
+need the same shortcuts bound, or the keys changed in `layers.json`.
 
 ![All layers](firmware/pictures/astvaldr-layers.png)
 
 Single layers: [layer 0](firmware/pictures/astvaldr-layer-0.png),
 [layer 1](firmware/pictures/astvaldr-layer-1.png),
-[layer 2](firmware/pictures/astvaldr-layer-2.png),
-[gaming layer](firmware/pictures/astvaldr-gaming-layer.png).
+[layer 2 (gaming)](firmware/pictures/astvaldr-gaming-layer.png),
+[layer 3](firmware/pictures/astvaldr-layer-3.png),
+[layer 4](firmware/pictures/astvaldr-layer-4.png).
 
 ### Lighting
 
 [`firmware/led-effects.md`](firmware/led-effects.md) lists every RGB matrix effect,
 what it looks like, whether the hue and saturation keys change it, and whether it
 reacts to typing.
+
+Brightness is capped at 96 of 255. Solid white at the cap draws about 0.43 A,
+measured with a USB meter, under the 500 mA the board asks the host for.
+
+### Firmware variants
+
+There are two ready builds. Pick one and flash its left and right files:
+
+| Files | Effects | Notes |
+| :--- | :--- | :--- |
+| `astvaldr-left.uf2`, `astvaldr-right.uf2` | 30 | Default. The effects kept after a tour of all of them |
+| `astvaldr-full-left.uf2`, `astvaldr-full-right.uf2` | 50 | Every RGB matrix effect QMK has |
+
+The Effect +/- keys step through a build's effects in order, so an effect's number is
+different in the two builds. `led-effects.md` lists both numberings and which effects the
+default build keeps. To build the full variant yourself, run
+`gen_astvaldr.py --all-effects` before compiling.
 
 ### Source files
 
@@ -98,7 +129,12 @@ reacts to typing.
 - `via_import.py`: copies a keymap saved from the VIA app back into `layers.json`.
 - `keyboards/astvaldr_tester/`: a matrix tester firmware for checking the wiring of
   one half; `astvaldr_tester_default.uf2` is a ready build of it.
-- `astvaldr-left.uf2`, `astvaldr-right.uf2`: ready builds of the current firmware.
+- `keyboards/astvaldr_tester/keymaps/ledmap/`: an LED mapper for checking a half's LED
+  chain against `*-leds.json`. It lights one LED at a time; tap the key on the lit LED
+  and the console prints `LED n R<row> C<col>`, or wait 3 s if no key sits on it.
+  `astvaldr-ledmap.uf2` is a ready build that works on either half. Read the console
+  with `console_listen.py`. Flash the normal firmware back afterwards.
+- `astvaldr-*.uf2`: ready builds (see Firmware variants).
 
 ### Setup
 

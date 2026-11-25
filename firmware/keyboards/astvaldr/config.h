@@ -18,5 +18,12 @@
 #define ENCODER_A_PINS_RIGHT { GP27 }
 #define ENCODER_B_PINS_RIGHT { GP26 }
 
+/* Render every LED in one pass. By default QMK splits a frame into passes of
+ * about a fifth of the LEDs and draws the layer lighting (keymap.c) after each.
+ * Digital Rain repaints every LED on every pass, so later passes wiped the
+ * painted keys. Equal to the LED count, QMK's rgb_matrix_get_limits takes its
+ * unchunked path (it chunks only when the limit is below the count). */
+#define RGB_MATRIX_LED_PROCESS_LIMIT RGB_MATRIX_LED_COUNT
+
 /* Double-tap RESET enters the bootloader. */
 #define RP2040_BOOTLOADER_DOUBLE_TAP_RESET

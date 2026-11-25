@@ -4,7 +4,10 @@ print view: a dark panel per layer, a key cap where each switch sits, its legend
 Reads layers.json (the keymap) and switches.json (where the keys sit).
 Writes into pictures/: astvaldr-layer-<n>.svg and .png, and astvaldr-layers.svg and
 .png with every layer on one sheet. Run it with the venv's python (it needs cairosvg
-for the .png files): .venv/bin/python render_layers.py"""
+for the .png files): .venv/bin/python render_layers.py
+Also writes astvaldr-gaming-layer.svg and .png, the gaming layer alone. A key the layer's
+lighting paints (layers.json) gets an outline in that color; a dead key (KC_NO) is blank."""
+import colorsys
 import json
 import math
 import os
@@ -23,7 +26,7 @@ PAGE, PANEL, KEY, KEY_EDGE, TEXT, DIM, TITLE = "#262626", "#3d3d3d", "#4a4a4a", 
 
 # A legend is one line, or two lines split by "\n" (for a symbol key: shifted over plain).
 NAMED = {
-    "KC_NO": "", "_______": "▽",
+    "KC_NO": "",
     "KC_LSFT": "Left\nShift", "KC_RSFT": "Right\nShift", "KC_LCTL": "Left\nCtrl", "KC_RCTL": "Right\nCtrl",
     "KC_LALT": "Left\nAlt", "KC_RALT": "Right\nAlt", "KC_LGUI": "Left\nOS", "KC_RGUI": "Right\nOS",
     "KC_SPC": "Space", "KC_ENT": "Enter", "KC_ESC": "Esc", "KC_TAB": "Tab", "KC_BSPC": "Back\nSpace", "KC_DEL": "Delete",
@@ -37,6 +40,26 @@ NAMED = {
     "UG_VALU": "LED\nBright +", "UG_VALD": "LED\nBright −", "UG_HUEU": "LED\nHue +", "UG_HUED": "LED\nHue −",
     "UG_SATU": "LED\nSat +", "UG_SATD": "LED\nSat −", "UG_SPDU": "LED\nSpeed +", "UG_SPDD": "LED\nSpeed −",
     "QK_BOOT": "Boot\nloader", "C(KC_BSPC)": "Delete\nWord",
+    # whole shortcuts on one key
+    "C(KC_C)": "Copy", "C(KC_V)": "Paste", "C(KC_Z)": "Undo", "C(S(KC_Z))": "Redo", "C(KC_X)": "Cut",
+    "C(KC_LEFT)": "Word\nLeft", "C(KC_RGHT)": "Word\nRight", "KC_F20": "Mic\nMute",
+    "KC_BRID": "Screen\nBright -", "KC_BRIU": "Screen\nBright +",
+    "MS_UP": "Mouse\nUp", "MS_DOWN": "Mouse\nDown", "MS_LEFT": "Mouse\nLeft", "MS_RGHT": "Mouse\nRight",
+    "MS_BTN1": "Left\nClick", "MS_BTN2": "Right\nClick", "MS_BTN3": "Middle\nClick",
+    "MS_WHLU": "Wheel\nUp", "MS_WHLD": "Wheel\nDown", "MS_WHLL": "Wheel\nLeft", "MS_WHLR": "Wheel\nRight",
+    # KDE window shortcuts (the quest's section 4); CF_ keys also move the pointer after the focus
+    "CF_FOCUS_UP": "Focus\nUp", "CF_FOCUS_LEFT": "Focus\nLeft", "CF_FOCUS_DOWN": "Focus\nDown",
+    "CF_FOCUS_RIGHT": "Focus\nRight", "CF_SCREEN_LEFT": "Window to\nscreen \u2190",
+    "CF_SCREEN_RIGHT": "Window to\nscreen \u2192",
+    "LALT(KC_F4)": "Close\nWindow", "LGUI(KC_PGDN)": "Minimize", "LGUI(KC_PGUP)": "Maximize",
+    "LGUI(LCTL(LALT(KC_C)))": "Center\nWindow", "LGUI(LCTL(LALT(KC_D)))": "Show\nDesktop",
+    "LGUI(LCTL(KC_ESC))": "Kill\nWindow",
+    "LGUI(LCTL(LALT(KC_UP)))": "My tile\nUp", "LGUI(LCTL(LALT(KC_LEFT)))": "My tile\nLeft",
+    "LGUI(LCTL(LALT(KC_DOWN)))": "My tile\nDown", "LGUI(LCTL(LALT(KC_RGHT)))": "My tile\nRight",
+    "LGUI(LCTL(LALT(KC_1)))": "Tile\nTop-Left", "LGUI(LCTL(LALT(KC_2)))": "Tile\nTop-Right",
+    "LGUI(LCTL(LALT(KC_3)))": "Tile\nBot-Left", "LGUI(LCTL(LALT(KC_4)))": "Tile\nBot-Right",
+    "LGUI(KC_UP)": "Tile\nTop", "LGUI(KC_DOWN)": "Tile\nBottom", "LGUI(KC_LEFT)": "Tile\nLeft",
+    "LGUI(KC_RGHT)": "Tile\nRight", "LGUI(KC_W)": "Overview", "LGUI(KC_T)": "Edit\nTiles",
 }
 PAIRS = {  # plain key: (shifted, plain)
     "KC_GRV": "~\n`", "KC_MINS": "_\n-", "KC_EQL": "+\n=", "KC_LBRC": "{\n[", "KC_RBRC": "}\n]", "KC_BSLS": "|\n\\",
@@ -69,11 +92,32 @@ def legend(code):
     return code.replace("KC_", "").replace("_", "\n", 1)
 
 
-# What the encoder does on each layer (turn, push): set in gen_astvaldr.py, not in layers.json.
-ENCODER = [("Vol \u2212 / +", "Mute")]
-
 pos = json.load(open(os.path.join(HERE, "switches.json")))["switches"]
-layers = json.load(open(os.path.join(HERE, "layers.json")))["layers"]
+source = json.load(open(os.path.join(HERE, "layers.json")))
+layers = source["layers"]
+# What the encoder does on each layer (turn, push): set in gen_astvaldr.py, the same on every layer.
+ENCODER = [("Vol \u2212 / +", "Mute")] * len(layers)
+
+
+def hs_color(hs):
+    """A layers.json color (QMK hue and saturation, 0-255) as an SVG color, at full value."""
+    r, g, b = colorsys.hsv_to_rgb(hs[0] / 255, hs[1] / 255, 1.0)
+    return f"rgb({r * 255:.0f},{g * 255:.0f},{b * 255:.0f})"
+
+
+def painted(n):
+    """switch -> SVG color, for the keys layer n's lighting paints (dark keys are left out)."""
+    spec, out = layers[n], {}
+    for p in spec.get("lighting", {}).get("paint", []):
+        hs = source["colors"][p["color"]]
+        keys = p["keys"]
+        if keys in ("working", "dead"):
+            keys = [k for k, v in spec["bindings"].items() if (v != "KC_NO") == (keys == "working")]
+        for k in keys:
+            if hs is not None:
+                out[k] = hs_color(hs)
+    return out
+
 
 top = max(s["y"] for s in pos.values())
 left = [s for s in pos.values() if s["side"] == "left"]
@@ -109,15 +153,18 @@ def thumb_angle(sw):
     return a if side == "L" else a - 180
 
 
-def cap(x, y, label, angle=0):
+def cap(x, y, label, angle=0, lit=None):
     size = PX - GAP
     cx, cy = x + size / 2, y + size / 2
     turn = f' transform="rotate({angle:.1f} {cx:.1f} {cy:.1f})"' if angle else ""
-    out = [f'<rect x="{x:.1f}" y="{y:.1f}" width="{size}" height="{size}" rx="6" fill="{KEY}" stroke="{KEY_EDGE}"{turn}/>']
+    edge = f'stroke="{lit}" stroke-width="2.5"' if lit else f'stroke="{KEY_EDGE}"'
+    out = [f'<rect x="{x:.1f}" y="{y:.1f}" width="{size}" height="{size}" rx="6" fill="{KEY}" {edge}{turn}/>']
+    if not label:
+        return "".join(out)
     lines = label.split("\n")
     longest = max(len(line) for line in lines)
     fs = 17 if longest <= 2 else 15 if longest == 3 and len(lines) == 1 else 10.5 if longest <= 8 else 9
-    fill = DIM if label == "▽" else TEXT
+    fill = TEXT
     if len(lines) == 1:
         out.append(text(cx, cy, lines[0], fs, fill))
     else:
@@ -131,18 +178,24 @@ def block(n, y0):
     """One layer: its title and its panel, drawn with the panel's top at y0 + TITLE_H."""
     spec = layers[n]
     keys = spec["bindings"]
-    g = [text(WIDTH / 2, y0 + TITLE_H / 2, f"Layer {n}: {spec['name']}", 20, TITLE, "bold")]
+    assert set(keys) == set(pos), f"layer {n} must name every switch"
+    title = f"Layer {n}: {spec['name']}"
+    effect = spec.get("lighting", {}).get("effect")
+    if effect:
+        title += f"  (lighting: {effect.replace('_', ' ').title()})"
+    g = [text(WIDTH / 2, y0 + TITLE_H / 2, title, 20, TITLE, "bold")]
+    lit = painted(n)
     py = y0 + TITLE_H
     g.append(f'<rect x="{PAD}" y="{py:.1f}" width="{PANEL_W:.1f}" height="{PANEL_H:.1f}" rx="8" fill="{PANEL}"/>')
     for sw in pos:
         x, y = key_xy(sw)
-        g.append(cap(PAD + x, py + y, legend(keys.get(sw, "KC_NO" if n == 0 else "_______")), thumb_angle(sw)))
+        g.append(cap(PAD + x, py + y, legend(keys[sw]), thumb_angle(sw), lit.get(sw)))
     # the EC11, drawn between the halves: it is not a switch position
     ex, ey, r = PAD + PANEL_W / 2, py + PAD + PX * 1.1, PX * 0.62
-    turn, push = ENCODER[n] if n < len(ENCODER) else ("\u25bd", "\u25bd")
+    turn, push = ENCODER[n]
     g.append(f'<circle cx="{ex:.1f}" cy="{ey:.1f}" r="{r:.1f}" fill="{KEY}" stroke="{KEY_EDGE}"/>')
-    g.append(text(ex, ey - 9, turn, 10.5, DIM if turn == "\u25bd" else TEXT))
-    g.append(text(ex, ey + 9, push, 10.5, DIM if push == "\u25bd" else TEXT))
+    g.append(text(ex, ey - 9, turn, 10.5, TEXT))
+    g.append(text(ex, ey + 9, push, 10.5, TEXT))
     g.append(text(ex, ey + r + 14, "encoder: turn, push", 10, DIM))
     return "".join(g)
 
@@ -158,6 +211,7 @@ def sheet(which):
 os.makedirs(OUT, exist_ok=True)
 files = {f"astvaldr-layer-{n}": sheet([n]) for n in range(len(layers))}
 files["astvaldr-layers"] = sheet(list(range(len(layers))))
+files["astvaldr-gaming-layer"] = sheet([next(n for n, s in enumerate(layers) if s["name"].startswith("Gaming"))])
 try:
     import cairosvg
 except ImportError:

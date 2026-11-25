@@ -36,6 +36,9 @@
         "encoder": true,
         "rgb_matrix": true
     },
+    "dynamic_keymap": {
+        "layer_count": 5
+    },
     "split": {
         "enabled": true,
         "serial": {
@@ -58,28 +61,50 @@
             48,
             48
         ],
-        "max_brightness": 40,
+        "max_brightness": 96,
+        "val_steps": 8,
+        "hue_steps": 16,
+        "sat_steps": 32,
+        "speed_steps": 32,
+        "default": {
+            "animation": "raindrops",
+            "hue": 200,
+            "sat": 223,
+            "val": 96,
+            "speed": 95
+        },
         "sleep": true,
         "animations": {
             "solid_color": true,
+            "alphas_mods": true,
             "breathing": true,
-            "gradient_up_down": true,
-            "gradient_left_right": true,
-            "hue_wave": true,
-            "cycle_all": true,
-            "cycle_left_right": true,
-            "cycle_up_down": true,
-            "cycle_out_in": true,
-            "cycle_pinwheel": true,
-            "cycle_spiral": true,
-            "rainbow_moving_chevron": true,
+            "band_sat": true,
+            "band_val": true,
+            "band_pinwheel_sat": true,
+            "band_pinwheel_val": true,
+            "band_spiral_sat": true,
+            "band_spiral_val": true,
             "raindrops": true,
+            "pixel_rain": true,
+            "pixel_flow": true,
+            "typing_heatmap": true,
+            "digital_rain": true,
             "solid_reactive_simple": true,
             "solid_reactive": true,
+            "solid_reactive_wide": true,
             "solid_reactive_multiwide": true,
-            "splash": true,
+            "solid_reactive_cross": true,
+            "solid_reactive_multicross": true,
+            "solid_reactive_nexus": true,
+            "solid_reactive_multinexus": true,
             "multisplash": true,
-            "solid_splash": true
+            "solid_splash": true,
+            "solid_multisplash": true,
+            "starlight_smooth": true,
+            "starlight": true,
+            "starlight_dual_sat": true,
+            "starlight_dual_hue": true,
+            "riverflow": true
         },
         "layout": [
             {

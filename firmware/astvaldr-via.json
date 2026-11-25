@@ -9,6 +9,38 @@
   "menus": [
     "qmk_rgb_matrix"
   ],
+  "customKeycodes": [
+    {
+      "name": "Focus Up",
+      "title": "Focus Up, then move the pointer to it",
+      "shortName": "Focus Up"
+    },
+    {
+      "name": "Focus Left",
+      "title": "Focus Left, then move the pointer to it",
+      "shortName": "Focus Left"
+    },
+    {
+      "name": "Focus Down",
+      "title": "Focus Down, then move the pointer to it",
+      "shortName": "Focus Down"
+    },
+    {
+      "name": "Focus Right",
+      "title": "Focus Right, then move the pointer to it",
+      "shortName": "Focus Right"
+    },
+    {
+      "name": "Window to screen Left",
+      "title": "Window to screen Left, then move the pointer to it",
+      "shortName": "Window to screen Left"
+    },
+    {
+      "name": "Window to screen Right",
+      "title": "Window to screen Right, then move the pointer to it",
+      "shortName": "Window to screen Right"
+    }
+  ],
   "layouts": {
     "keymap": [
       [
