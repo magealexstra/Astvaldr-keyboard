@@ -1,0 +1,6 @@
+# Astvaldr (USB vendor id 4d41) and its matrix tester (feed): lets the logged-in user
+# reach their raw HID channels. The VIA app, flash.py and the tester's console need it.
+# Install:
+#   sudo cp 50-astvaldr.rules /etc/udev/rules.d/ && sudo udevadm control --reload-rules && sudo udevadm trigger
+KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="4d41", TAG+="uaccess"
+KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="feed", TAG+="uaccess"

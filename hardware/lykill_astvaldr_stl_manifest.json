@@ -1,0 +1,23 @@
+{
+  "preset": "astvaldr",
+  "exported_components": [
+    "lykill_astvaldr_bottom_plate_left.stl",
+    "lykill_astvaldr_wrist_rest_left.stl",
+    "lykill_astvaldr_bottom_plate_right.stl",
+    "lykill_astvaldr_wrist_rest_right.stl",
+    "lykill_astvaldr_sculpted_case_left.stl",
+    "lykill_astvaldr_sculpted_case_right.stl"
+  ],
+  "project_file": "lykill_astvaldr.lykill.json",
+  "dag_stages": [
+    "top_case_shell",
+    "case_walls",
+    "bottom_plate",
+    "standalone_switch_plate",
+    "sculpted_case",
+    "tenting_wedge",
+    "wrist_rest"
+  ],
+  "units": "mm",
+  "format": "Binary STL (IEEE 754 float32)"
+}

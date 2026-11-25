@@ -1,0 +1,12 @@
+# Python virtual environment and caches
+.venv/
+__pycache__/
+*.pyc
+
+# Build and console logs
+*.log
+left-console.log
+right-console.log
+
+# Temporary LED test builds
+firmware/astvaldr-ledtest-*.uf2

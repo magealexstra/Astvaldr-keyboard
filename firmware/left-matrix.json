@@ -1,0 +1,183 @@
+{
+ "half": "left",
+ "names": "Lemon Wired v0.4: row R1..R7, col C1..C7",
+ "diode_direction": "ROW2COL",
+ "switches": {
+  "L_pi_+3": {
+   "row": 1,
+   "col": 6
+  },
+  "L_ri_+3": {
+   "row": 1,
+   "col": 5
+  },
+  "L_mi_+3": {
+   "row": 1,
+   "col": 4
+  },
+  "L_po_+3": {
+   "row": 1,
+   "col": 3
+  },
+  "L_xpo_+3": {
+   "row": 1,
+   "col": 2
+  },
+  "L_xpo1_+3": {
+   "row": 1,
+   "col": 1
+  },
+  "L_xpi_+2": {
+   "row": 1,
+   "col": 7
+  },
+  "L_pi_+2": {
+   "row": 2,
+   "col": 6
+  },
+  "L_ri_+2": {
+   "row": 2,
+   "col": 5
+  },
+  "L_mi_+2": {
+   "row": 2,
+   "col": 4
+  },
+  "L_po_+2": {
+   "row": 2,
+   "col": 3
+  },
+  "L_xpo_+2": {
+   "row": 2,
+   "col": 2
+  },
+  "L_xpo1_+2": {
+   "row": 2,
+   "col": 1
+  },
+  "L_xpi_+1": {
+   "row": 2,
+   "col": 7
+  },
+  "L_pi_+1": {
+   "row": 3,
+   "col": 6
+  },
+  "L_ri_+1": {
+   "row": 3,
+   "col": 5
+  },
+  "L_mi_+1": {
+   "row": 3,
+   "col": 4
+  },
+  "L_po_+1": {
+   "row": 3,
+   "col": 3
+  },
+  "L_xpo_+1": {
+   "row": 3,
+   "col": 2
+  },
+  "L_xpo1_+1": {
+   "row": 3,
+   "col": 1
+  },
+  "L_xpi_0": {
+   "row": 3,
+   "col": 7
+  },
+  "L_pi_0": {
+   "row": 4,
+   "col": 6
+  },
+  "L_ri_0": {
+   "row": 4,
+   "col": 5
+  },
+  "L_mi_0": {
+   "row": 4,
+   "col": 4
+  },
+  "L_po_0": {
+   "row": 4,
+   "col": 3
+  },
+  "L_xpo_0": {
+   "row": 4,
+   "col": 2
+  },
+  "L_xpo1_0": {
+   "row": 4,
+   "col": 1
+  },
+  "L_xpi_-1": {
+   "row": 4,
+   "col": 7
+  },
+  "L_pi_-1": {
+   "row": 5,
+   "col": 6
+  },
+  "L_ri_-1": {
+   "row": 5,
+   "col": 5
+  },
+  "L_mi_-1": {
+   "row": 5,
+   "col": 4
+  },
+  "L_po_-1": {
+   "row": 5,
+   "col": 3
+  },
+  "L_xpo_-1": {
+   "row": 5,
+   "col": 2
+  },
+  "L_xpi_-2": {
+   "row": 5,
+   "col": 7
+  },
+  "L_pi_-2": {
+   "row": 6,
+   "col": 6
+  },
+  "L_ri_-2": {
+   "row": 6,
+   "col": 5
+  },
+  "L_mi_-2": {
+   "row": 6,
+   "col": 4
+  },
+  "L_po_-2": {
+   "row": 6,
+   "col": 3
+  },
+  "L_pri_-1": {
+   "row": 7,
+   "col": 1
+  },
+  "L_pri_0": {
+   "row": 7,
+   "col": 2
+  },
+  "L_pri_+1": {
+   "row": 7,
+   "col": 3
+  },
+  "L_pri-1_-1": {
+   "row": 7,
+   "col": 6
+  },
+  "L_pri-1_0": {
+   "row": 7,
+   "col": 5
+  },
+  "L_pri-1_+1": {
+   "row": 7,
+   "col": 4
+  }
+ }
+}
